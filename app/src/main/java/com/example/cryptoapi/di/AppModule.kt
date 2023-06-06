@@ -1,6 +1,7 @@
 package com.example.cryptoapi.di
 
 import com.db.williamchart.BuildConfig
+import com.example.cryptoapi.repository.ApiRepository
 import com.example.cryptoapi.retrofit.ApiService
 import com.example.cryptoapi.utils.Constants.BASE_URL
 import com.example.cryptoapi.utils.Constants.NETWORK_TIMEOUT
@@ -25,6 +26,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBaseUrl() = BASE_URL
+
+    @Provides
+    @Singleton
+    fun provideApiRepository(apiService: ApiService) : ApiRepository{
+
+        return ApiRepository(apiService)
+
+    }
 
     @Provides
     @Singleton

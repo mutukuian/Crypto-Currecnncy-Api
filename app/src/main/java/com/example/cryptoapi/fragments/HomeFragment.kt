@@ -8,11 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cryptoapi.R
 import com.example.cryptoapi.adapters.CryptoAdapter
 import com.example.cryptoapi.databinding.FragmentHomeBinding
-import com.example.cryptoapi.retrofit.ResponseListItem
 import com.example.cryptoapi.utils.DataStatus
 import com.example.cryptoapi.utils.initRecyclerView
 import com.example.cryptoapi.utils.isVisible
@@ -38,7 +38,7 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -60,6 +60,10 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
                         DataStatus.Status.SUCCESS ->{
                             pBarLoading.isVisible(false,rvCrypto)
                             cryptoAdapter.differ.submitList(it.data)
+                            cryptoAdapter.setOnItemClickListener {
+                                val direction = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(it.id)
+                                findNavController().navigate(direction)
+                            }
                         }
                         DataStatus.Status.ERROR ->{
                             pBarLoading.isVisible(true,rvCrypto)

@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cryptoapi.repository.ApiRepository
-import com.example.cryptoapi.retrofit.ResponseList
-import com.example.cryptoapi.retrofit.ResponseListItem
+import com.example.cryptoapi.retrofit.detailsresponse.ResponseDetails
+import com.example.cryptoapi.retrofit.getresponse.ResponseListItem
 
 
 import com.example.cryptoapi.utils.DataStatus
@@ -24,10 +24,18 @@ class MainViewModel @Inject constructor(
         val coinList :LiveData<DataStatus<List<ResponseListItem>>>
                 get() = _coinList
 
+    private val _coinDetails = MutableLiveData<DataStatus<ResponseDetails>>()
+        val coinDetails : LiveData<DataStatus<ResponseDetails>>
+            get() = _coinDetails
 
     fun getCoinList(vs_currency : String)  = viewModelScope.launch {
         repository.getCoinList(vs_currency).collect{
             _coinList.value = it
+        }
+    }
+    fun getCoinDetails(id:String) = viewModelScope.launch {
+        repository.getCoinDetails(id).collect{
+            _coinDetails.value = it
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.cryptoapi.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +8,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bumptech.glide.Glide
 import com.example.cryptoapi.R
 import com.example.cryptoapi.databinding.ItemBinding
-import com.example.cryptoapi.retrofit.ResponseListItem
+import com.example.cryptoapi.retrofit.getresponse.ResponseListItem
 import com.example.cryptoapi.utils.Constants.animationDuration
 import com.example.cryptoapi.utils.roundToTwoDecimals
 import com.example.cryptoapi.utils.toDoubleToFloat
@@ -19,7 +19,8 @@ import javax.inject.Inject
 class CryptoAdapter @Inject constructor():RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
     inner class CryptoViewHolder( val binding: ItemBinding):RecyclerView.ViewHolder(binding.root){
-        fun bindData(item:ResponseListItem) {
+        @SuppressLint("SetTextI18n")
+        fun bindData(item: ResponseListItem) {
             binding.apply {
 
                 tvName.text = item.id
@@ -41,9 +42,20 @@ class CryptoAdapter @Inject constructor():RecyclerView.Adapter<CryptoAdapter.Cry
                 val listData = item.sparkline_in_7d.price.toDoubleToFloat()
                 lineChart.animate(listData)
 
+                root.setOnClickListener {
+                    onClick?.let {
+                        it(item)
+                    }
+                }
+
             }
         }
 
+    }
+
+    private var onClick : ((ResponseListItem) -> Unit)?= null
+    fun setOnItemClickListener(listener :(ResponseListItem) -> Unit){
+        onClick = listener
     }
 
     private val differCallback = object:DiffUtil.ItemCallback<ResponseListItem>(){

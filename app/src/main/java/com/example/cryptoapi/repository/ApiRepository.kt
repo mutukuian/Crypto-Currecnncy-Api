@@ -29,4 +29,25 @@ class ApiRepository @Inject constructor(
     }.catch {
         emit(DataStatus.error(it.message.toString()))
     }.flowOn(Dispatchers.IO)  // provides more scalability in handling data fetching in an application
+
+
+
+    suspend fun getCoinDetails(id : String) = flow {
+        emit(DataStatus.loading())
+        val result = apiService.getDetailsCoin(id)
+        when(result.code()){
+            200 ->{
+                emit(DataStatus.success(result.body()))
+            }
+            400 ->{
+                emit(DataStatus.error(result.message()))
+            }
+            500 ->{
+                emit(DataStatus.error(result.message()))
+            }
+        }
+    }.catch {
+        emit(DataStatus.error(it.message.toString()))
+    }
+
 }

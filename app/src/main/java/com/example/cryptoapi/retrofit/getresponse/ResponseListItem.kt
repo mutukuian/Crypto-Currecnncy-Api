@@ -1,4 +1,4 @@
-package com.example.cryptoapi.retrofit
+package com.example.cryptoapi.retrofit.getresponse
 
 data class ResponseListItem(
     val ath: Double,
